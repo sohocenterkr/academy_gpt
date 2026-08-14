@@ -162,3 +162,13 @@
     gap: 10px;
   }
 }
+
+
+/* Mobile password reset */
+@media (max-width: 768px) {
+  .success-panel {
+    margin-inline: -16px;
+    padding: 20px 16px;
+    border-radius: 0;
+  }
+}

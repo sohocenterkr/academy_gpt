@@ -31,3 +31,27 @@ describe("관리자 인증 API 기본 동작", () => {
     expect(response.body).toEqual({ success: true });
   });
 });
+
+
+describe("비밀번호 재설정 API 입력 검증", () => {
+  it("잘못된 이메일 형식은 발송 전에 거부한다", async () => {
+    const response = await request(createApp())
+      .post("/api/auth/forgot-password")
+      .send({ email: "not-an-email" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe("INVALID_RESET_REQUEST");
+  });
+
+  it("잘못된 토큰 형식은 비밀번호 변경 전에 거부한다", async () => {
+    const response = await request(createApp())
+      .post("/api/auth/reset-password")
+      .send({
+        token: "invalid-token",
+        password: "ValidPassword!123"
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe("INVALID_RESET_INPUT");
+  });
+});

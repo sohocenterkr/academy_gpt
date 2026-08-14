@@ -12,6 +12,15 @@ const authEnvSchema = databaseEnvSchema.extend({
     .min(64, "AUTH_SESSION_SECRET은 64자 이상이어야 합니다.")
 });
 
+const emailEnvSchema = authEnvSchema.extend({
+  RESEND_API_KEY: z
+    .string({ error: "RESEND_API_KEY가 필요합니다." })
+    .startsWith("re_", "RESEND_API_KEY 형식이 올바르지 않습니다."),
+  RESEND_FROM_EMAIL: z
+    .string({ error: "RESEND_FROM_EMAIL이 필요합니다." })
+    .min(3, "RESEND_FROM_EMAIL이 비어 있습니다.")
+});
+
 const initialAdminEnvSchema = authEnvSchema.extend({
   INITIAL_ADMIN_EMAIL: z
     .email("INITIAL_ADMIN_EMAIL 형식이 올바르지 않습니다."),
@@ -53,6 +62,15 @@ export function getAuthEnv() {
 
 export function getInitialAdminEnv() {
   const result = initialAdminEnvSchema.safeParse(process.env);
+  if (!result.success) {
+    throw formatEnvironmentError(result.error);
+  }
+  return result.data;
+}
+
+
+export function getEmailEnv() {
+  const result = emailEnvSchema.safeParse(process.env);
   if (!result.success) {
     throw formatEnvironmentError(result.error);
   }

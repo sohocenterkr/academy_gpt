@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { Router, type Request } from "express";
 import { rateLimit } from "express-rate-limit";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, gt, inArray, isNull } from "drizzle-orm";
 import { z } from "zod";
 import { getDatabase } from "../db";
 import {
@@ -12,11 +12,27 @@ import {
   setSessionCookie
 } from "../services/auth/session";
 import {
+  hashPassword,
   normalizeEmail,
   verifyPassword
 } from "../services/auth/password";
 import { toKstIsoString } from "../../shared/kst";
-import { admins, auditLogs } from "../../shared/schema";
+import {
+  adminSessions,
+  admins,
+  auditLogs,
+  passwordResetTokens
+} from "../../shared/schema";
+import {
+  createPasswordResetToken,
+  hashPasswordResetToken,
+  invalidatePasswordResetToken
+} from "../services/auth/password-reset";
+import { sendPasswordResetEmail } from "../services/email/resend";
+import {
+  passwordResetConfirmSchema,
+  passwordResetRequestSchema
+} from "../../shared/validators/auth";
 
 const router = Router();
 const MAX_FAILED_ATTEMPTS = 5;
@@ -43,6 +59,28 @@ const loginRateLimiter = rateLimit({
       }
     });
   }
+});
+
+const passwordResetRequestRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (_request, response) => {
+    response.status(429).json({
+      error: {
+        code: "TOO_MANY_RESET_REQUESTS",
+        message: "재설정 요청이 너무 많습니다. 15분 후 다시 시도해 주세요."
+      }
+    });
+  }
+});
+
+const passwordResetConfirmRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false
 });
 
 function getRequestMetadata(request: Request) {
@@ -292,5 +330,230 @@ router.post("/logout", async (request, response, next) => {
     next(error);
   }
 });
+
+
+router.post(
+  "/forgot-password",
+  passwordResetRequestRateLimiter,
+  async (request, response, next) => {
+    const startedAt = Date.now();
+
+    try {
+      const input = passwordResetRequestSchema.safeParse(request.body);
+
+      if (!input.success) {
+        response.status(400).json({
+          error: {
+            code: "INVALID_RESET_REQUEST",
+            message:
+              input.error.issues[0]?.message ?? "입력값을 확인해 주세요."
+          }
+        });
+        return;
+      }
+
+      const database = getDatabase();
+      const email = normalizeEmail(input.data.email);
+      const requestMetadata = getRequestMetadata(request);
+
+      const [admin] = await database
+        .select({
+          id: admins.id,
+          email: admins.email,
+          name: admins.name,
+          status: admins.status
+        })
+        .from(admins)
+        .where(
+          and(
+            eq(admins.email, email),
+            isNull(admins.deletedAt),
+            inArray(admins.status, ["active", "locked"])
+          )
+        )
+        .limit(1);
+
+      if (admin) {
+        const reset = await createPasswordResetToken({
+          adminId: admin.id,
+          requestedIp: requestMetadata.ipAddress
+        });
+
+        try {
+          const resendMessageId = await sendPasswordResetEmail({
+            to: admin.email,
+            adminName: admin.name,
+            token: reset.token
+          });
+
+          await database.insert(auditLogs).values({
+            actorAdminId: admin.id,
+            action: "PASSWORD_RESET_EMAIL_SENT",
+            entityType: "admin",
+            entityId: admin.id,
+            metadata: {
+              resendMessageId,
+              expiresAt: toKstIsoString(reset.expiresAt)
+            },
+            ...requestMetadata
+          });
+        } catch (emailError) {
+          await invalidatePasswordResetToken(reset.token);
+
+          await database.insert(auditLogs).values({
+            actorAdminId: admin.id,
+            action: "PASSWORD_RESET_EMAIL_FAILED",
+            entityType: "admin",
+            entityId: admin.id,
+            metadata: {
+              reason:
+                emailError instanceof Error
+                  ? emailError.message.slice(0, 300)
+                  : "unknown_email_error"
+            },
+            ...requestMetadata
+          });
+
+          console.error(
+            "비밀번호 재설정 이메일 발송 실패:",
+            emailError instanceof Error ? emailError.message : "알 수 없는 오류"
+          );
+        }
+      }
+
+      const minimumResponseTime = 300;
+      const remainingDelay = minimumResponseTime - (Date.now() - startedAt);
+
+      if (remainingDelay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingDelay));
+      }
+
+      response.status(200).json({
+        success: true,
+        message:
+          "등록된 관리자 이메일이면 비밀번호 재설정 안내를 발송했습니다."
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/reset-password",
+  passwordResetConfirmRateLimiter,
+  async (request, response, next) => {
+    try {
+      const input = passwordResetConfirmSchema.safeParse(request.body);
+
+      if (!input.success) {
+        response.status(400).json({
+          error: {
+            code: "INVALID_RESET_INPUT",
+            message:
+              input.error.issues[0]?.message ?? "입력값을 확인해 주세요."
+          }
+        });
+        return;
+      }
+
+      const database = getDatabase();
+      const tokenHash = hashPasswordResetToken(input.data.token);
+      const passwordHash = await hashPassword(input.data.password);
+      const now = new Date();
+      const requestMetadata = getRequestMetadata(request);
+
+      const passwordChanged = await database.transaction(
+        async (transaction) => {
+          const [resetRecord] = await transaction
+            .select({
+              tokenId: passwordResetTokens.id,
+              adminId: admins.id
+            })
+            .from(passwordResetTokens)
+            .innerJoin(
+              admins,
+              eq(passwordResetTokens.adminId, admins.id)
+            )
+            .where(
+              and(
+                eq(passwordResetTokens.tokenHash, tokenHash),
+                isNull(passwordResetTokens.usedAt),
+                gt(passwordResetTokens.expiresAt, now),
+                isNull(admins.deletedAt),
+                inArray(admins.status, ["active", "locked"])
+              )
+            )
+            .for("update")
+            .limit(1);
+
+          if (!resetRecord) {
+            return false;
+          }
+
+          await transaction
+            .update(passwordResetTokens)
+            .set({ usedAt: now })
+            .where(eq(passwordResetTokens.id, resetRecord.tokenId));
+
+          await transaction
+            .update(admins)
+            .set({
+              passwordHash,
+              passwordChangedAt: now,
+              failedLoginAttempts: 0,
+              lockedUntil: null,
+              status: "active",
+              updatedAt: now
+            })
+            .where(eq(admins.id, resetRecord.adminId));
+
+          await transaction
+            .update(adminSessions)
+            .set({ revokedAt: now })
+            .where(
+              and(
+                eq(adminSessions.adminId, resetRecord.adminId),
+                isNull(adminSessions.revokedAt)
+              )
+            );
+
+          await transaction.insert(auditLogs).values({
+            actorAdminId: resetRecord.adminId,
+            action: "PASSWORD_RESET_SUCCEEDED",
+            entityType: "admin",
+            entityId: resetRecord.adminId,
+            metadata: {
+              allSessionsRevoked: true
+            },
+            ...requestMetadata
+          });
+
+          return true;
+        }
+      );
+
+      if (!passwordChanged) {
+        response.status(400).json({
+          error: {
+            code: "INVALID_OR_EXPIRED_RESET_TOKEN",
+            message:
+              "재설정 링크가 만료되었거나 이미 사용되었습니다. 다시 요청해 주세요."
+          }
+        });
+        return;
+      }
+
+      clearSessionCookie(response);
+
+      response.status(200).json({
+        success: true,
+        message: "비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요."
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export { router as authRouter };

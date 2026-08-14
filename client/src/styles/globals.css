@@ -438,3 +438,43 @@ input:disabled {
     animation-duration: 1400ms;
   }
 }
+
+
+/* Password reset UI */
+.success-panel {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  margin-block: 26px 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--success-bg);
+  color: #166534;
+}
+
+.success-panel h2,
+.success-panel p {
+  margin-bottom: 0;
+}
+
+.success-panel h2 {
+  font-size: 20px;
+}
+
+.success-panel p {
+  line-height: 1.65;
+}
+
+.success-panel .button {
+  margin-top: 10px;
+}
+
+.password-rules {
+  display: grid;
+  gap: 6px;
+  margin: -4px 0 0;
+  padding-left: 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
