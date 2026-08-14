@@ -7,17 +7,27 @@
 - React + TypeScript + Vite
 - Express API 서버
 - 모바일 Edge-to-edge UI
-- `/api/health` 상태 확인
-- Vitest 자동 테스트
+- `/api/health` KST 상태 확인
+- Vitest + Supertest 자동 테스트
 - Vercel Singapore 설정
-- Drizzle 관리자 인증 스키마
+- Drizzle ORM 기반 PostgreSQL 스키마
 - 최초 최고관리자 생성 완료
 - 관리자 로그인·세션·로그아웃 완료
+- Resend 비밀번호 재설정 구현 완료
 - 최고관리자·일반관리자 권한표 완료
 - 최고관리자 전용 감사기록 조회 완료
-- Resend 비밀번호 재설정 구현 완료
+- 학원 기본정보 조회·수정 완료
+- 학교·학년 기준정보 등록·수정·비활성화·순서관리 완료
 
-현재는 기반 프로젝트, 개발 DB 스키마, 최초 최고관리자 생성까지 완료됐습니다. 관리자 로그인·세션·로그아웃까지 완료됐습니다. 다음 단계에서 Resend 비밀번호 재설정과 역할·권한을 연결합니다.
+현재는 관리자 인증, 권한, 감사기록과 학사 기준정보 관리까지 구현됐습니다. 다음 단계에서는 관리자 계정 관리와 학생·보호자 관리를 연결합니다.
+
+## 주요 관리 화면
+
+- 대시보드: `/`
+- 학원 기본정보: `/admin/settings/academy`
+- 학교·학년 관리: `/admin/settings/academics`
+- 감사기록: `/audit-logs`
+- 로그인: `/login`
 
 ## 실행과 검증
 
@@ -25,6 +35,20 @@
 - TypeScript 검사: `npm run check`
 - 자동 테스트: `npm run test`
 - Production 빌드: `npm run build`
+- DB 마이그레이션 생성: `npm run db:generate`
+- DB 마이그레이션 검사: `npm run db:check`
+- DB 마이그레이션 적용: `npm run db:migrate`
+
+## DB 적용 상태
+
+Replit 개발 DB에 다음 마이그레이션이 적용되어 있습니다.
+
+- `0000_initial_auth`
+- `0001_academic_reference_data`
+
+Production Neon DB에는 아직 마이그레이션을 적용하지 않았습니다.
+
+Replit 개발 DB에는 화면 검증을 위한 `[테스트]` 학교·학년과 예시 학원 기본정보가 들어 있습니다.
 
 ## 운영 원칙
 

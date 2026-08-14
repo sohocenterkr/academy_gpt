@@ -7,6 +7,9 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/auth";
 import { auditRouter } from "./routes/audit";
+import { schoolsRouter } from "./routes/schools";
+import { gradeLevelsRouter } from "./routes/grade-levels";
+import { academySettingsRouter } from "./routes/academy-settings";
 import { toKstIsoString } from "../shared/kst";
 
 export function createApp() {
@@ -35,6 +38,9 @@ export function createApp() {
 
   app.use("/api/auth", authRouter);
   app.use("/api/audit-logs", auditRouter);
+  app.use("/api/schools", schoolsRouter);
+  app.use("/api/grade-levels", gradeLevelsRouter);
+  app.use("/api/settings/academy", academySettingsRouter);
 
   app.use("/api", (_request: Request, response: Response) => {
     response.status(404).json({

@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Activity,
+  Building2,
   GraduationCap,
   MessageSquareText,
   Newspaper,
+  Settings2,
   ShieldCheck,
   Users
 } from "lucide-react";
@@ -129,6 +131,47 @@ export function DashboardPage({ admin }: DashboardPageProps) {
               </article>
             </div>
           </section>
+
+          {hasPermission(admin.role, "academics:view") ? (
+            <section className="content-card">
+              <div className="section-heading">
+                <div>
+                  <p className="eyebrow">운영 기준</p>
+                  <h2>학원 설정</h2>
+                </div>
+              </div>
+
+              <Link
+                href="/admin/settings/academics"
+                className="admin-tool-link"
+              >
+                <span className="admin-tool-icon" aria-hidden="true">
+                  <Settings2 size={24} />
+                </span>
+                <span>
+                  <strong>학교·학년 관리</strong>
+                  <small>
+                    학생 등록에 사용할 학교와 학년 목록을 관리합니다.
+                  </small>
+                </span>
+              </Link>
+
+              <Link
+                href="/admin/settings/academy"
+                className="admin-tool-link"
+              >
+                <span className="admin-tool-icon" aria-hidden="true">
+                  <Building2 size={24} />
+                </span>
+                <span>
+                  <strong>학원 기본정보</strong>
+                  <small>
+                    학원명, 연락처와 브랜드 기본값을 관리합니다.
+                  </small>
+                </span>
+              </Link>
+            </section>
+          ) : null}
 
           {hasPermission(admin.role, "audit:view") ? (
             <section className="content-card">

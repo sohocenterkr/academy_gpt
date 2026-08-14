@@ -258,3 +258,216 @@
     min-width: 86px;
   }
 }
+
+
+/* Mobile academic reference settings */
+@media (max-width: 768px) {
+  .settings-tabs {
+    margin-inline: -16px;
+    padding: 5px 16px;
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .settings-tab {
+    min-height: 48px;
+  }
+
+  .reference-manager {
+    margin-top: 22px;
+  }
+
+  .reference-toolbar {
+    display: grid;
+    gap: 16px;
+  }
+
+  .reference-toolbar .button {
+    width: 100%;
+    min-height: 50px;
+  }
+
+  .read-only-badge {
+    width: fit-content;
+  }
+
+  .reference-state {
+    margin-inline: -16px;
+    padding: 36px 16px;
+  }
+
+  .reference-empty {
+    margin-inline: -16px;
+    padding: 38px 16px;
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .reference-list {
+    margin-inline: -16px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: #edf1f6;
+  }
+
+  .reference-item {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 18px 16px;
+    border: 0;
+  }
+
+  .reference-item + .reference-item {
+    margin-top: 7px;
+    border-top: 0;
+  }
+
+  .reference-order {
+    align-self: start;
+    padding-top: 3px;
+    text-align: left;
+  }
+
+  .status-badge {
+    align-self: start;
+  }
+
+  .reference-actions {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 5px;
+  }
+
+  .reference-actions .button {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .sheet-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .sheet-panel {
+    width: 100%;
+    max-height: 92dvh;
+    padding: 22px 16px max(20px, env(safe-area-inset-bottom));
+    border-radius: 18px 18px 0 0;
+  }
+
+  .sheet-header {
+    margin-bottom: 22px;
+  }
+
+  .sheet-header h2 {
+    font-size: 22px;
+  }
+
+  .sheet-form .field input {
+    min-height: 52px;
+    font-size: 16px;
+  }
+
+  .check-field {
+    padding: 15px 14px;
+  }
+
+  .sheet-actions .button {
+    min-height: 50px;
+  }
+}
+
+
+/* Mobile academy settings */
+@media (max-width: 768px) {
+  .admin-tool-link + .admin-tool-link {
+    margin-top: 8px;
+  }
+
+  .academy-settings-form {
+    gap: 0;
+  }
+
+  .read-only-notice {
+    margin-inline: -16px;
+    padding: 16px;
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .settings-form-section {
+    margin-inline: -16px;
+    padding: 22px 16px;
+    border-bottom: 0;
+    background: #ffffff;
+  }
+
+  .settings-form-section + .settings-form-section {
+    border-top: 8px solid #edf1f6;
+  }
+
+  .settings-form-section:last-of-type {
+    padding-bottom: 22px;
+  }
+
+  .settings-form-grid {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+
+  .settings-full-field {
+    grid-column: auto;
+  }
+
+  .settings-form-heading h2 {
+    font-size: 20px;
+  }
+
+  .academy-settings-form .field input,
+  .academy-settings-form .field textarea {
+    min-height: 52px;
+    font-size: 16px;
+  }
+
+  .academy-settings-form .field textarea {
+    min-height: 110px;
+  }
+
+  .color-input-row {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .color-input-row input[type="color"] {
+    width: 56px;
+    min-width: 56px;
+  }
+
+  .pending-feature {
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .academy-settings-form > .form-error,
+  .academy-settings-form > .form-success {
+    margin: 18px 0 0;
+  }
+
+  .settings-save-actions {
+    margin-inline: -16px;
+    padding: 20px 16px 0;
+    border-top: 8px solid #edf1f6;
+  }
+
+  .settings-save-actions .button {
+    width: 100%;
+    min-height: 52px;
+  }
+
+  .settings-load-error {
+    margin-inline: -16px;
+    padding: 42px 16px;
+  }
+}

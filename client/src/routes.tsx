@@ -1,11 +1,29 @@
 import { Link, Route, Switch } from "wouter";
 import { AppHeader } from "./components/layout/AppHeader";
+import { AcademicSettingsPage } from "./features/academics/AcademicSettingsPage";
+import { AcademySettingsPage } from "./features/settings/AcademySettingsPage";
 import { AuditLogsPage } from "./features/audit/AuditLogsPage";
 import { AuthGate } from "./features/auth/AuthGate";
 import { ForgotPasswordPage } from "./features/auth/ForgotPasswordPage";
 import { LoginPage } from "./features/auth/LoginPage";
 import { ResetPasswordPage } from "./features/auth/ResetPasswordPage";
 import { DashboardPage } from "./features/dashboard/DashboardPage";
+
+function ProtectedAcademySettings() {
+  return (
+    <AuthGate>
+      {(admin) => <AcademySettingsPage admin={admin} />}
+    </AuthGate>
+  );
+}
+
+function ProtectedAcademicSettings() {
+  return (
+    <AuthGate>
+      {(admin) => <AcademicSettingsPage admin={admin} />}
+    </AuthGate>
+  );
+}
 
 function ProtectedAuditLogs() {
   return (
@@ -44,6 +62,14 @@ export function AppRoutes() {
   return (
     <Switch>
       <Route path="/" component={ProtectedDashboard} />
+      <Route
+        path="/admin/settings/academy"
+        component={ProtectedAcademySettings}
+      />
+      <Route
+        path="/admin/settings/academics"
+        component={ProtectedAcademicSettings}
+      />
       <Route path="/audit-logs" component={ProtectedAuditLogs} />
       <Route path="/login" component={LoginPage} />
       <Route path="/forgot-password" component={ForgotPasswordPage} />
