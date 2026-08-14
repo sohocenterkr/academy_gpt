@@ -1,0 +1,42 @@
+{
+  "name": "academy-gpt",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "vitest run",
+    "dev": "NODE_ENV=development tsx server/index.ts",
+    "check": "tsc --noEmit",
+    "build": "npm run check && vite build",
+    "start": "NODE_ENV=production tsx server/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "description": "",
+  "dependencies": {
+    "@tanstack/react-query": "^5.101.4",
+    "express": "^5.2.1",
+    "helmet": "^8.3.0",
+    "lucide-react": "^1.31.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "wouter": "^3.10.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@types/supertest": "^7.2.1",
+    "@vitejs/plugin-react": "^6.0.5",
+    "jsdom": "^29.1.1",
+    "supertest": "^7.2.2",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
+  },
+  "private": true,
+  "type": "module"
+}
