@@ -6,6 +6,7 @@ import express, {
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/auth";
+import { auditRouter } from "./routes/audit";
 import { toKstIsoString } from "../shared/kst";
 
 export function createApp() {
@@ -33,6 +34,7 @@ export function createApp() {
   });
 
   app.use("/api/auth", authRouter);
+  app.use("/api/audit-logs", auditRouter);
 
   app.use("/api", (_request: Request, response: Response) => {
     response.status(404).json({

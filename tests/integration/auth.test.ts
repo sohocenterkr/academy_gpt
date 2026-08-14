@@ -55,3 +55,15 @@ describe("비밀번호 재설정 API 입력 검증", () => {
     expect(response.body.error.code).toBe("INVALID_RESET_INPUT");
   });
 });
+
+
+describe("권한 조회 API", () => {
+  it("로그인하지 않은 권한 조회는 401을 반환한다", async () => {
+    const response = await request(createApp()).get(
+      "/api/auth/permissions"
+    );
+
+    expect(response.status).toBe(401);
+    expect(response.body.error.code).toBe("NOT_AUTHENTICATED");
+  });
+});

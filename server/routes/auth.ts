@@ -17,6 +17,11 @@ import {
   verifyPassword
 } from "../services/auth/password";
 import { toKstIsoString } from "../../shared/kst";
+import { getPermissionsForRole } from "../../shared/permissions";
+import {
+  getAuthenticatedLocals,
+  requireAuthentication
+} from "../middleware/auth";
 import {
   adminSessions,
   admins,
@@ -305,6 +310,19 @@ router.get("/me", async (request, response, next) => {
     next(error);
   }
 });
+
+router.get(
+  "/permissions",
+  requireAuthentication,
+  (_request, response) => {
+    const admin = getAuthenticatedLocals(response.locals);
+
+    response.status(200).json({
+      role: admin.role,
+      permissions: getPermissionsForRole(admin.role)
+    });
+  }
+);
 
 router.post("/logout", async (request, response, next) => {
   try {

@@ -172,3 +172,89 @@
     border-radius: 0;
   }
 }
+
+
+/* Mobile audit logs */
+@media (max-width: 768px) {
+  .page-title-row {
+    display: grid;
+    gap: 18px;
+  }
+
+  .page-title {
+    font-size: 30px;
+  }
+
+  .page-title-row > .button {
+    width: fit-content;
+  }
+
+  .admin-tool-link {
+    margin-inline: -16px;
+    padding: 18px 16px;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .audit-filters {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .filter-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .field select,
+  .audit-filters .field input {
+    min-height: 52px;
+    font-size: 16px;
+  }
+
+  .audit-list {
+    margin-inline: -16px;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .audit-list-header {
+    display: none;
+  }
+
+  .audit-record {
+    padding: 18px 16px;
+    border: 0;
+    background: #f7f9fc;
+  }
+
+  .audit-record + .audit-record {
+    margin-top: 8px;
+  }
+
+  .audit-record-summary {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 0;
+  }
+
+  .mobile-field-label {
+    display: block;
+  }
+
+  .audit-details {
+    padding: 16px 0 0;
+  }
+
+  .audit-details dl > div {
+    grid-template-columns: 68px minmax(0, 1fr);
+  }
+
+  .pagination {
+    justify-content: space-between;
+  }
+
+  .pagination .button {
+    min-width: 86px;
+  }
+}

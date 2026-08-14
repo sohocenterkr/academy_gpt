@@ -4,9 +4,11 @@ import {
   GraduationCap,
   MessageSquareText,
   Newspaper,
+  ShieldCheck,
   Users
 } from "lucide-react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
+import { hasPermission } from "../../../../shared/permissions";
 import { AppHeader } from "../../components/layout/AppHeader";
 import {
   logoutAdmin,
@@ -127,6 +129,29 @@ export function DashboardPage({ admin }: DashboardPageProps) {
               </article>
             </div>
           </section>
+
+          {hasPermission(admin.role, "audit:view") ? (
+            <section className="content-card">
+              <div className="section-heading">
+                <div>
+                  <p className="eyebrow">최고관리자 전용</p>
+                  <h2>운영 관리</h2>
+                </div>
+              </div>
+
+              <Link href="/audit-logs" className="admin-tool-link">
+                <span className="admin-tool-icon" aria-hidden="true">
+                  <ShieldCheck size={24} />
+                </span>
+                <span>
+                  <strong>감사기록</strong>
+                  <small>
+                    로그인과 비밀번호 변경 등 관리자 활동을 확인합니다.
+                  </small>
+                </span>
+              </Link>
+            </section>
+          ) : null}
         </div>
       </main>
     </div>

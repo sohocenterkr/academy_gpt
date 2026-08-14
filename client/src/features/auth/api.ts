@@ -1,4 +1,4 @@
-export type AdminRole = "super_admin" | "admin";
+import type { AdminRole, Permission } from "../../../../shared/permissions";
 
 export type PublicAdmin = {
   id: string;
@@ -138,4 +138,22 @@ export async function resetPassword(input: {
   };
 
   return body.message;
+}
+
+
+export async function getCurrentPermissions(): Promise<Permission[]> {
+  const response = await fetch("/api/auth/permissions", {
+    method: "GET",
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+
+  const body = (await response.json()) as {
+    permissions: Permission[];
+  };
+
+  return body.permissions;
 }

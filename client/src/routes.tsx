@@ -1,10 +1,19 @@
 import { Link, Route, Switch } from "wouter";
 import { AppHeader } from "./components/layout/AppHeader";
+import { AuditLogsPage } from "./features/audit/AuditLogsPage";
 import { AuthGate } from "./features/auth/AuthGate";
 import { ForgotPasswordPage } from "./features/auth/ForgotPasswordPage";
 import { LoginPage } from "./features/auth/LoginPage";
 import { ResetPasswordPage } from "./features/auth/ResetPasswordPage";
 import { DashboardPage } from "./features/dashboard/DashboardPage";
+
+function ProtectedAuditLogs() {
+  return (
+    <AuthGate>
+      {(admin) => <AuditLogsPage admin={admin} />}
+    </AuthGate>
+  );
+}
 
 function NotFoundPage() {
   return (
@@ -35,6 +44,7 @@ export function AppRoutes() {
   return (
     <Switch>
       <Route path="/" component={ProtectedDashboard} />
+      <Route path="/audit-logs" component={ProtectedAuditLogs} />
       <Route path="/login" component={LoginPage} />
       <Route path="/forgot-password" component={ForgotPasswordPage} />
       <Route path="/reset-password" component={ResetPasswordPage} />
