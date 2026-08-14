@@ -1097,3 +1097,190 @@ input:disabled {
 .settings-load-error p {
   margin: 0;
 }
+
+
+/* Administrator management UI */
+.admin-filters {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 180px 180px auto;
+  align-items: end;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.admin-filters .filter-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-list {
+  overflow: hidden;
+  border: 1px solid #dfe5ee;
+  border-radius: 12px;
+}
+
+.admin-record {
+  display: grid;
+  grid-template-columns:
+    minmax(210px, 1.4fr)
+    120px
+    100px
+    minmax(170px, 1fr)
+    auto;
+  align-items: center;
+  gap: 16px;
+  padding: 17px 16px;
+  background: #ffffff;
+}
+
+.admin-record + .admin-record {
+  border-top: 1px solid #e7ebf1;
+}
+
+.admin-record-main {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.admin-record-main > div {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-record-main strong,
+.admin-record-main span {
+  overflow-wrap: anywhere;
+}
+
+.admin-record-main > span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.current-account-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.admin-record-field {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.admin-record-field small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.admin-record-field > span:not(.status-badge),
+.admin-record-field > strong {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+.status-badge.is-locked {
+  background: #fff1e8;
+  color: #b54708;
+}
+
+.admin-record-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.admin-record-actions .button {
+  white-space: nowrap;
+}
+
+.form-guidance {
+  padding: 14px;
+  border-radius: 9px;
+  background: #f2f6ff;
+  color: #344054;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.permission-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #dfe5ee;
+  border-radius: 12px;
+}
+
+.permission-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+}
+
+.permission-table th,
+.permission-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #e7ebf1;
+  text-align: center;
+}
+
+.permission-table th {
+  background: #f7f9fc;
+  color: #475467;
+  font-size: 13px;
+}
+
+.permission-table th:first-child,
+.permission-table td:first-child {
+  text-align: left;
+}
+
+.permission-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.permission-table td:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.permission-table td:first-child strong {
+  font-size: 14px;
+}
+
+.permission-table td:first-child small {
+  color: var(--text-muted);
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.permission-yes,
+.permission-no {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.permission-yes {
+  background: #eafaf1;
+  color: #08783f;
+}
+
+.permission-no {
+  background: #f2f4f7;
+  color: #98a2b3;
+}
+
+
+.permission-mobile-list {
+  display: none;
+}

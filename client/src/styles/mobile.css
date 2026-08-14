@@ -471,3 +471,129 @@
     padding: 42px 16px;
   }
 }
+
+
+/* Mobile administrator management */
+@media (max-width: 768px) {
+  .admin-filters {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .admin-filters .filter-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-filters .field input,
+  .admin-filters .field select {
+    min-height: 52px;
+    font-size: 16px;
+  }
+
+  .admin-list {
+    margin-inline: -16px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: #edf1f6;
+  }
+
+  .admin-record {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 12px;
+    padding: 18px 16px;
+    border: 0;
+  }
+
+  .admin-record + .admin-record {
+    margin-top: 8px;
+    border-top: 0;
+  }
+
+  .admin-record-main {
+    grid-column: 1 / -1;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e4e8ef;
+  }
+
+  .admin-record-field:nth-of-type(4) {
+    grid-column: 1 / -1;
+  }
+
+  .admin-record-actions {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .admin-record-actions .button {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .admin-record-actions .button:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .permission-table-wrap {
+    display: none;
+  }
+
+  .permission-mobile-list {
+    display: grid;
+    gap: 8px;
+    margin-inline: -16px;
+    background: #edf1f6;
+  }
+
+  .permission-mobile-card {
+    display: grid;
+    gap: 16px;
+    padding: 18px 16px;
+    background: #ffffff;
+  }
+
+  .permission-mobile-card > div {
+    display: grid;
+    gap: 4px;
+  }
+
+  .permission-mobile-card > div small {
+    color: var(--text-muted);
+    font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    overflow-wrap: anywhere;
+  }
+
+  .permission-mobile-card dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .permission-mobile-card dl > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: #f7f9fc;
+  }
+
+  .permission-mobile-card dt {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .permission-mobile-card dd {
+    margin: 0;
+  }
+
+  .sheet-form .field select {
+    min-height: 52px;
+    font-size: 16px;
+  }
+}

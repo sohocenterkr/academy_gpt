@@ -24,6 +24,7 @@ const auditQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(20),
   action: z.string().trim().max(100).optional(),
+  entityId: z.string().uuid().optional(),
   dateFrom: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
@@ -52,7 +53,14 @@ router.get("/", requirePermission("audit:view"), async (
       return;
     }
 
-    const { page, pageSize, action, dateFrom, dateTo } = parsed.data;
+    const {
+      page,
+      pageSize,
+      action,
+      entityId,
+      dateFrom,
+      dateTo
+    } = parsed.data;
 
     if (dateFrom && dateTo && dateFrom > dateTo) {
       response.status(400).json({
@@ -68,6 +76,10 @@ router.get("/", requirePermission("audit:view"), async (
 
     if (action) {
       conditions.push(eq(auditLogs.action, action));
+    }
+
+    if (entityId) {
+      conditions.push(eq(auditLogs.entityId, entityId));
     }
 
     if (dateFrom) {

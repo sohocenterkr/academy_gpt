@@ -10,6 +10,7 @@ import { auditRouter } from "./routes/audit";
 import { schoolsRouter } from "./routes/schools";
 import { gradeLevelsRouter } from "./routes/grade-levels";
 import { academySettingsRouter } from "./routes/academy-settings";
+import { adminsRouter } from "./routes/admins";
 import { toKstIsoString } from "../shared/kst";
 
 export function createApp() {
@@ -41,6 +42,7 @@ export function createApp() {
   app.use("/api/schools", schoolsRouter);
   app.use("/api/grade-levels", gradeLevelsRouter);
   app.use("/api/settings/academy", academySettingsRouter);
+  app.use("/api/admins", adminsRouter);
 
   app.use("/api", (_request: Request, response: Response) => {
     response.status(404).json({

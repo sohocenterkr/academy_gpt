@@ -7,6 +7,7 @@ import {
   Newspaper,
   Settings2,
   ShieldCheck,
+  UserCog,
   Users
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
@@ -181,6 +182,21 @@ export function DashboardPage({ admin }: DashboardPageProps) {
                   <h2>운영 관리</h2>
                 </div>
               </div>
+
+              <Link
+                href="/admin/settings/admins"
+                className="admin-tool-link"
+              >
+                <span className="admin-tool-icon" aria-hidden="true">
+                  <UserCog size={24} />
+                </span>
+                <span>
+                  <strong>관리자 계정</strong>
+                  <small>
+                    관리자 역할, 상태와 비밀번호 설정을 관리합니다.
+                  </small>
+                </span>
+              </Link>
 
               <Link href="/audit-logs" className="admin-tool-link">
                 <span className="admin-tool-icon" aria-hidden="true">

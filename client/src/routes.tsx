@@ -2,12 +2,21 @@ import { Link, Route, Switch } from "wouter";
 import { AppHeader } from "./components/layout/AppHeader";
 import { AcademicSettingsPage } from "./features/academics/AcademicSettingsPage";
 import { AcademySettingsPage } from "./features/settings/AcademySettingsPage";
+import { AdminsPage } from "./features/admins/AdminsPage";
 import { AuditLogsPage } from "./features/audit/AuditLogsPage";
 import { AuthGate } from "./features/auth/AuthGate";
 import { ForgotPasswordPage } from "./features/auth/ForgotPasswordPage";
 import { LoginPage } from "./features/auth/LoginPage";
 import { ResetPasswordPage } from "./features/auth/ResetPasswordPage";
 import { DashboardPage } from "./features/dashboard/DashboardPage";
+
+function ProtectedAdmins() {
+  return (
+    <AuthGate>
+      {(admin) => <AdminsPage admin={admin} />}
+    </AuthGate>
+  );
+}
 
 function ProtectedAcademySettings() {
   return (
@@ -62,6 +71,10 @@ export function AppRoutes() {
   return (
     <Switch>
       <Route path="/" component={ProtectedDashboard} />
+      <Route
+        path="/admin/settings/admins"
+        component={ProtectedAdmins}
+      />
       <Route
         path="/admin/settings/academy"
         component={ProtectedAcademySettings}

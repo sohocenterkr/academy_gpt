@@ -26,6 +26,7 @@ export type AuditLogQuery = {
   page: number;
   pageSize: number;
   action?: string;
+  entityId?: string;
   dateFrom?: string;
   dateTo?: string;
 };
@@ -40,6 +41,10 @@ export async function getAuditLogs(
 
   if (query.action) {
     search.set("action", query.action);
+  }
+
+  if (query.entityId) {
+    search.set("entityId", query.entityId);
   }
 
   if (query.dateFrom) {

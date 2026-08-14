@@ -27,7 +27,26 @@ const actionLabels: Record<string, string> = {
   ADMIN_LOGOUT: "관리자 로그아웃",
   PASSWORD_RESET_EMAIL_SENT: "재설정 이메일 발송",
   PASSWORD_RESET_EMAIL_FAILED: "재설정 이메일 발송 실패",
-  PASSWORD_RESET_SUCCEEDED: "비밀번호 재설정 완료"
+  PASSWORD_RESET_SUCCEEDED: "비밀번호 재설정 완료",
+  ADMIN_CREATED: "관리자 등록",
+  ADMIN_UPDATED: "관리자 정보 수정",
+  ADMIN_DEACTIVATED: "관리자 비활성화",
+  ADMIN_REACTIVATED: "관리자 재활성화",
+  ADMIN_INVITATION_EMAIL_SENT: "관리자 초대 이메일 발송",
+  ADMIN_INVITATION_EMAIL_FAILED: "관리자 초대 이메일 실패",
+  ADMIN_RESET_EMAIL_SENT: "관리자 재설정 이메일 발송",
+  ADMIN_RESET_EMAIL_FAILED: "관리자 재설정 이메일 실패",
+  ADMIN_DEMO_DATA_SEEDED: "테스트 관리자 생성",
+  ACADEMY_SETTINGS_CREATED: "학원 기본정보 생성",
+  ACADEMY_SETTINGS_UPDATED: "학원 기본정보 수정",
+  ACADEMY_SETTINGS_DEMO_SEEDED: "예시 학원정보 생성",
+  SCHOOL_CREATED: "학교 등록",
+  SCHOOL_UPDATED: "학교 수정",
+  SCHOOL_DEACTIVATED: "학교 비활성화",
+  GRADE_LEVEL_CREATED: "학년 등록",
+  GRADE_LEVEL_UPDATED: "학년 수정",
+  GRADE_LEVEL_DEACTIVATED: "학년 비활성화",
+  ACADEMIC_DEMO_DATA_SEEDED: "학사 테스트자료 생성"
 };
 
 const actionOptions = Object.entries(actionLabels);
@@ -44,10 +63,13 @@ export function AuditLogsPage({ admin }: AuditLogsPageProps) {
   const [draftAction, setDraftAction] = useState("");
   const [draftDateFrom, setDraftDateFrom] = useState("");
   const [draftDateTo, setDraftDateTo] = useState("");
-  const [query, setQuery] = useState<AuditLogQuery>({
+  const [query, setQuery] = useState<AuditLogQuery>(() => ({
     page: 1,
-    pageSize: 20
-  });
+    pageSize: 20,
+    entityId:
+      new URLSearchParams(window.location.search).get("entityId") ||
+      undefined
+  }));
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
 
@@ -94,6 +116,7 @@ export function AuditLogsPage({ admin }: AuditLogsPageProps) {
       page: 1,
       pageSize: 20,
       action: draftAction || undefined,
+      entityId: query.entityId,
       dateFrom: draftDateFrom || undefined,
       dateTo: draftDateTo || undefined
     });
