@@ -4,6 +4,8 @@ import express, {
   type Response
 } from "express";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import { authRouter } from "./routes/auth";
 import { toKstIsoString } from "../shared/kst";
 
 export function createApp() {
@@ -19,6 +21,7 @@ export function createApp() {
     })
   );
   app.use(express.json({ limit: "1mb" }));
+  app.use(cookieParser());
 
   app.get("/api/health", (_request: Request, response: Response) => {
     response.status(200).json({
@@ -28,6 +31,8 @@ export function createApp() {
       timestamp: toKstIsoString()
     });
   });
+
+  app.use("/api/auth", authRouter);
 
   app.use("/api", (_request: Request, response: Response) => {
     response.status(404).json({
